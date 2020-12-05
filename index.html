@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Youtube Superchat Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha256-2JaAhvdQnfNMMnhWPauHOZ2k+dzftBmBjjownu3HC4g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+    <style>
+        .container {
+            max-width: 512px;
+            margin: 0 auto;
+        }
+
+        .card {
+            overflow: hidden;
+            margin-top: 40px;
+        }
+
+        .super-chat {
+            /* #content */
+            --bg-color-cyan: rgb(29, 233, 182);
+            --bg-color-yellow: rgb(255, 202, 40);
+            --bg-color-red: rgb(230, 33, 23);
+            --bg-color-orange: rgb(245, 124, 0);
+            --bg-color-magenta: rgb(233, 30, 99);
+            --bg-color: var(--bg-color-cyan)
+        }
+
+        .super-chat .header {
+            /* #header */
+            --bg-color-cyan: rgb(0, 191, 165);
+            --bg-color-yellow: rgb(255, 179, 0);
+            --bg-color-red: rgb(208, 0, 0);
+            --bg-color-orange: rgb(230, 81, 0);
+            --bg-color-magenta: rgb(194, 24, 91);
+            --bg-color-blue: rgb(21, 101, 192);
+            --bg-color: var(--bg-color-cyan)
+        }
+
+        .super-chat .header .name {
+            /* #author-name */
+            --color-cyan: rgba(0, 0, 0, 0.54);
+            --color-yellow: rgba(0, 0, 0, 0.54);
+            --color-red: rgba(255, 255, 255, 0.7);
+            --color-orange: rgba(255, 255, 255, 0.7);
+            --color-magenta: rgba(255, 255, 255, 0.7);
+            --color-blue: rgba(255, 255, 255, 0.7);
+            --color: var(--color-cyan)
+        }
+
+        .super-chat .header .price {
+            /* #purchase-amount */
+            --color-cyan: rgb(0, 0, 0);
+            --color-yellow: rgba(0, 0, 0, 0.875);
+            --color-red: rgb(255, 255, 255);
+            --color-orange: rgba(255, 255, 255, 0.875);
+            --color-magenta: rgb(255, 255, 255);
+            --color-blue: rgb(255, 255, 255);
+            --color: var(--color-cyan)
+        }
+
+        .super-chat .comment {
+            /* #message */
+            --color-cyan: rgb(0, 0, 0);
+            --color-yellow: rgba(0, 0, 0, 0.875);
+            --color-red: rgb(255, 255, 255);
+            --color-orange: rgba(255, 255, 255, 0.875);
+            --color-magenta: rgb(255, 255, 255);
+            --color: var(--color-cyan)
+        }
+
+        .super-chat {
+            color: #FFF;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--bg-color);
+            box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px, rgba(0, 0, 0, 0.2) 0px 3px 1px -2px;
+        }
+
+        .super-chat .header {
+            padding: 8px 16px;
+            background: var(--bg-color);
+            display: flex;
+        }
+
+        .super-chat .header .avatar {
+            margin-right: 16px;
+            width: 40px;
+            height: 40px;
+            display: block;
+            background: #FFF;
+            border-radius: 100em;
+        }
+
+        .super-chat .header .name {
+            color: var(--color);
+            font-family: "Roboto, Arial, sans-serif";
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .super-chat .header .price {
+            font-weight: 500;
+            font-family: "Roboto, Arial, sans-serif";
+            font-size: 15px;
+            color: var(--color);
+        }
+
+        .super-chat .comment {
+            padding: 8px 16px;
+            font-family: "Roboto, Arial, sans-serif";
+            font-size: 15px;
+            color: var(--color);
+        }
+    </style>
+    <script>
+        Dropzone.autoDiscover = false;
+
+        function bind(id) {
+            document.getElementById(`input-${id}`).addEventListener("change", e => {
+                document.getElementById(id).textContent = e.target.value
+            })
+        }
+
+        function setColor(color) {
+            function _setColor(query, _prop, _var) {
+                for (const e of [...document.querySelectorAll(query)]) {
+                    e.style[_prop] = `var(${_var})`
+                }
+            }
+
+            _setColor(".super-chat", "background", `--bg-color-${color}`)
+            _setColor(".super-chat .header", "background", `--bg-color-${color}`)
+            _setColor(".super-chat .header .name", "color", `--color-${color}`)
+            _setColor(".super-chat .header .price", "color", `--color-${color}`)
+            _setColor(".super-chat .comment", "color", `--color-${color}`)
+
+            for (const e of [...document.querySelectorAll(".comment")]) {
+                e.style.display = color === "blue" ? "none" : "block"
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", _ => {
+            bind("name")
+            bind("price")
+            bind("text")
+
+            document.getElementById("color").addEventListener("change", e => {
+                setColor(e.target.value)
+            })
+
+            document.getElementById(`input-avartar`).addEventListener("change", e => {
+                document.getElementById("avartar").src = e.target.value
+            })
+
+            window.dropzone = new Dropzone("#dropzone", {
+                url: "/",
+                paramName: "file",
+                autoProcessQueue: false,
+                accept: function (file, done) {
+                    const url = URL.createObjectURL(file)
+                    document.getElementById("input-avartar").value = url;
+                    document.getElementById("input-avartar").dispatchEvent(new Event("change"))
+                    done("Uploaded!")
+                },
+                complete: function (file) {
+                    this.removeFile(file);
+                }
+            });
+        })
+
+
+    </script>
+
+    <!-- dropzone -->
+    <style>
+        .dropzone {
+            border: 2px dashed #dedede;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+
+        .dropzone i {
+            font-size: 5rem;
+        }
+
+        .dropzone .dz-message {
+            color: rgba(0, 0, 0, .54);
+            font-weight: 500;
+            font-size: initial;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-9">
+                            <input id="json" type="text" class="form-control" placeholder="JSON">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <a id="submit" class="btn btn-primary btn-block">執行</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="super-chat">
+                    <div class="header">
+                        <img id="avartar" src="https://gnehs.net/img/avatar.svg" class="avatar">
+                        <div class="content">
+                            <div id="name" class="name">Leko</div>
+                            <div id="price" class="price">NT$100,000,000.00</div>
+                        </div>
+                    </div>
+                    <div id="text" class="comment">我好可愛，請給我錢 UmU</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="color">顏色</label>
+                        <div class="col-sm-10">
+                            <select id="color" class="custom-select">
+                                <option value="red">紅</option>
+                                <option value="magenta">洋紅</option>
+                                <option value="orange">橙</option>
+                                <option value="yellow">黃</option>
+                                <option value="cyan" selected>青</option>
+                                <option value="blue">藍</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="input-name">名字</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control mb-2" id="input-name" placeholder="Leko">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="input-price">金額</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control mb-2" id="input-price"
+                                placeholder="NT$100,000,000.00">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="input-text">內容</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control mb-2" id="input-text" placeholder="我好可愛，請給我錢 UmU"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="input-avartar">頭貼</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control mb-2" id="input-avartar"
+                                placeholder="https://gnehs.net/img/avatar.svg">
+                        </div>
+                    </div>
+
+                    <div class="dropzone dz-clickable" id="dropzone">
+                        <div class="dz-message d-flex flex-column">
+                            <i class="material-icons text-muted">cloud_upload</i>
+                            拖拉以上傳頭貼
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</body>
+
+</html>
