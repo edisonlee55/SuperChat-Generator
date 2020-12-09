@@ -15,6 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
         integrity="sha256-2JaAhvdQnfNMMnhWPauHOZ2k+dzftBmBjjownu3HC4g=" crossorigin="anonymous"></script>
     <script src="https://cdn.rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js" integrity="sha512-01CJ9/g7e8cUmY0DFTMcUw/ikS799FHiOA0eyHsUWfOetgbx/t6oV4otQ5zXKQyIrQGTHSmRVPIgrgLcZi/WMA==" crossorigin="anonymous"></script>
     <style>
         .container {
             max-width: 512px;
@@ -201,6 +202,56 @@
             text-transform: uppercase;
         }
     </style>
+
+    <!-- saveImage -->
+    <style>
+        #superchat:hover {
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function downloadURL(blobUrl, name = 'file.txt') {
+            // Create a link element
+            const link = document.createElement("a");
+
+            // Set link's href to point to the Blob URL
+            link.href = blobUrl;
+            link.download = name;
+
+            // Append link to the body
+            document.body.appendChild(link);
+
+            // Dispatch click event on the link
+            // This is necessary as link.click() does not work on the latest firefox
+            link.dispatchEvent(
+                new MouseEvent('click', { 
+                bubbles: true, 
+                cancelable: true, 
+                view: window 
+                })
+            );
+
+            // Remove link from body
+            document.body.removeChild(link);
+        }
+
+        function downloadBlob(blob, name = 'file.txt') {
+            // Convert your blob into a Blob URL (a special url that points to an object in the browser's memory)
+            const blobUrl = URL.createObjectURL(blob);
+
+            downloadURL(blobUrl, name)
+        }
+
+        async function saveImage(){
+            const target = document.getElementById('superchat')
+            const dataURI = await domtoimage.toSvg(target)
+            downloadURL(dataURI, 'superchat.svg');
+        }
+
+        document.addEventListener("DOMContentLoaded", e => {
+            document.getElementById('superchat').addEventListener("click", saveImage)
+        })
+    </script>
 </head>
 
 <body>
@@ -218,7 +269,7 @@
                     </div>
                 </form>
             </div>
-            <div class="card-body">
+            <div id="superchat" class="card-body">
                 <div class="super-chat">
                     <div class="header">
                         <img id="avartar" src="https://gnehs.net/img/avatar.svg" class="avatar">
