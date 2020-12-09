@@ -241,11 +241,25 @@
 
             downloadURL(blobUrl, name)
         }
-
-        async function saveImage(){
+        
+        async function saveSVG(){
             const target = document.getElementById('superchat')
             const dataURI = await domtoimage.toSvg(target)
             downloadURL(dataURI, 'superchat.svg');
+        }
+
+        async function saveImage(){
+            const scale = 4;
+            const target = document.getElementById('superchat')
+            const blob = await domtoimage.toBlob(target, {
+                width: target.clientWidth * scale,
+                height: target.clientHeight * scale,
+                style: {
+                    transform: 'scale('+scale+')',
+                    transformOrigin: 'top left'
+                }
+            })
+            downloadBlob(blob, 'superchat.png')
         }
 
         document.addEventListener("DOMContentLoaded", e => {
