@@ -178,6 +178,24 @@
                     this.removeFile(file);
                 }
             });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            let isChanged = false;
+            for(const key of ["name", "price", "text", "avartar"]) {
+                if (urlParams.has(key)){
+                    document.getElementById(`input-${key}`).value = urlParams.get(key);
+                    document.getElementById(`input-${key}`).dispatchEvent(new Event("change"))
+                    isChanged = true;
+                }
+            }
+            if(urlParams.has("color")){
+                document.getElementById("color").value = urlParams.get("color").toLowerCase();
+                document.getElementById("color").dispatchEvent(new Event("change"));
+                isChanged = true;
+            }
+            if (isChanged){
+                window.history.replaceState("", document.title, "/");
+            }
         })
 
 
