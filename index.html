@@ -15,7 +15,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
         integrity="sha256-2JaAhvdQnfNMMnhWPauHOZ2k+dzftBmBjjownu3HC4g=" crossorigin="anonymous"></script>
     <script src="https://cdn.rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js" integrity="sha512-01CJ9/g7e8cUmY0DFTMcUw/ikS799FHiOA0eyHsUWfOetgbx/t6oV4otQ5zXKQyIrQGTHSmRVPIgrgLcZi/WMA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"
+        integrity="sha512-01CJ9/g7e8cUmY0DFTMcUw/ikS799FHiOA0eyHsUWfOetgbx/t6oV4otQ5zXKQyIrQGTHSmRVPIgrgLcZi/WMA=="
+        crossorigin="anonymous"></script>
     <style>
         .container {
             max-width: 512px;
@@ -181,19 +183,19 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             let isChanged = false;
-            for(const key of ["name", "price", "text", "avartar"]) {
-                if (urlParams.has(key)){
+            for (const key of ["name", "price", "text", "avartar"]) {
+                if (urlParams.has(key)) {
                     document.getElementById(`input-${key}`).value = urlParams.get(key);
                     document.getElementById(`input-${key}`).dispatchEvent(new Event("change"))
                     isChanged = true;
                 }
             }
-            if(urlParams.has("color")){
+            if (urlParams.has("color")) {
                 document.getElementById("color").value = urlParams.get("color").toLowerCase();
                 document.getElementById("color").dispatchEvent(new Event("change"));
                 isChanged = true;
             }
-            if (isChanged){
+            if (isChanged) {
                 window.history.replaceState("", document.title, "/");
             }
         })
@@ -242,10 +244,10 @@
             // Dispatch click event on the link
             // This is necessary as link.click() does not work on the latest firefox
             link.dispatchEvent(
-                new MouseEvent('click', { 
-                bubbles: true, 
-                cancelable: true, 
-                view: window 
+                new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
                 })
             );
 
@@ -259,14 +261,14 @@
 
             downloadURL(blobUrl, name)
         }
-        
-        async function saveSVG(){
+
+        async function saveSVG() {
             const target = document.getElementById('superchat')
             const dataURI = await domtoimage.toSvg(target)
             downloadURL(dataURI, 'superchat.svg');
         }
 
-        async function saveImage(){
+        async function saveImage() {
             const scale = 4;
             const target = document.getElementById('superchat')
             const blob = await domtoimage.toBlob(target, {
@@ -289,19 +291,7 @@
 <body>
     <div class="container">
         <div class="card">
-            <div class="card-body">
-                <form>
-                    <div class="form-row">
-                        <div class="form-group col-md-9">
-                            <input id="json" type="text" class="form-control" placeholder="JSON">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <a id="submit" class="btn btn-primary btn-block">執行</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div id="superchat" class="card-body">
+            <div id="superchat">
                 <div class="super-chat">
                     <div class="header">
                         <img id="avartar" src="https://gnehs.net/img/avatar.svg" class="avatar">
@@ -313,7 +303,19 @@
                     <div id="text" class="comment">我好可愛，請給我錢 UmU</div>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="display: none;">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-9">
+                            <input id="json" type="text" class="form-control" placeholder="JSON">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <a id="submit" class="btn btn-primary btn-block">執行</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body" style="display: none;">
                 <form>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="color">顏色</label>
